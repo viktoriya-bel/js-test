@@ -36,6 +36,10 @@ module.exports = merge(common, {
 			{
 				test: /\.(styl|css)$/i,
 				use: ["style-loader", "css-loader?sourceMap=true", "stylus-loader"]
+			},
+			{
+				test: /\.css$/,
+				use: ["style-loader", "css-loader"]
 			}
 		]
 	}

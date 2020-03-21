@@ -3,15 +3,41 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>webpack starterkit</title>
+		<title>Изучение js</title>
 	</head>
 	<body>
-		<h1>webpack starter</h1>
-		<p>
-			✨ A lightweight foundation for your next webpack based frontend project.
-		</p>
-		<p>
-			✨ A lightweight foundation for your next webpack based frontend project.
-		</p>
+		<header></header>
+		<div class="pages">
+			<div class="top">
+				<div id="search">
+					<form class="form-search">
+						<input type="text" id="searchInput" class="input-large search-query">
+						<button type="submit" class="btn">Найти</button>
+					</form>
+				</div>
+				<button class="btn  btn-primary" type="button" data-toggle="modal" data-target="#ModalAdd"> Добавить пользователя </button>
+				<button class="btn  btn-primary" type="button"  data-toggle="modal" data-target="#ModalProfession"> Професии </button>
+			</div>
+
+			<table class="table">
+				<thead class="thead-inverse">
+				<tr>
+					<th>№</th>
+					<th>Имя</th>
+					<th>Фамилия</th>
+					<th>Дата рождения</th>
+					<th>Фото</th>
+					<th>Профессия</th>
+					<th></th>
+					<th></th>
+				</tr>
+				</thead>
+				<tbody id="table-people">
+
+				</tbody>
+			</table>
+
+
+		</div>
 	</body>
 </html>
