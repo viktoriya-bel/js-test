@@ -1,6 +1,7 @@
-import "../../node_modules/bootstrap/dist/css/bootstrap.min.css"
+import "../../node_modules/bootstrap/scss/bootstrap.scss"
 import "../styles/styles.styl"
 import $ from "jquery"
+import "@fortawesome/fontawesome-free/js/fontawesome"
 // eslint-disable-next-line no-unused-vars
 import bootstrap from "bootstrap"
 
@@ -24,16 +25,30 @@ PeopleArray = obj.results
 PeopleView()
 
 // eslint-disable-next-line require-jsdoc
+function searchExists(obj, val) {
+	// console.log(val)
+	const objVal = val.split(" ")
+	const nameFirst = obj.name.first
+	const nameLast = obj.name.last
+	for (const valOb of objVal) {
+		if (
+			String(nameFirst.toLowerCase()).includes(valOb.toLowerCase()) ||
+			String(nameLast.toLowerCase()).includes(valOb.toLowerCase())
+		) {
+			return true
+		} else {
+			return false
+		}
+	}
+}
+// eslint-disable-next-line require-jsdoc
 function PeopleView() {
-	const searchVal = $("#searchInput").val()
+	const searchVal = $(".js-search-input").val()
 	let tablePeople = ""
 	const PeopleArrayFilter = PeopleArray.filter(obj => {
 		let flag = false
 		Object.values(obj).forEach(() => {
-			if (
-				String(obj.name.first).includes(searchVal) ||
-				String(obj.name.last).includes(searchVal)
-			) {
+			if (searchExists(obj, searchVal)) {
 				flag = true
 				return
 			}
@@ -61,7 +76,7 @@ function PeopleView() {
 	document.getElementById("table-people").innerHTML = tablePeople
 }
 
-$(".form-search").submit(function() {
+$(".js-form-search").submit(function() {
 	// eslint-disable-next-line new-cap
 	PeopleView()
 	event.preventDefault()
@@ -75,8 +90,10 @@ $(".form-search").submit(function() {
 document.getElementsByClassName('removeAll').addEventListener('click', peopleRemove());
 */
 $(".removePeople").click(function() {
+	// eslint-disable-next-line no-invalid-this
 	const element = this.parentElement.parentElement
 	const index = Number(element.firstElementChild.innerHTML)
+	// eslint-disable-next-line new-cap
 	RemoveAll(element, PeopleArray, index)
 })
 
@@ -91,6 +108,7 @@ function RemoveAll(element, arr, index) {
 }
 
 $(".editPeople").click(function() {
+	// eslint-disable-next-line no-invalid-this
 	const parElement = this.parentElement
 	if (parElement.id === "date") {
 		parElement.innerHTML =
@@ -101,7 +119,8 @@ $(".editPeople").click(function() {
 	}
 })
 
-$("#table-people").on("click", ".save-Edit-People", function() {
+$(".js-table-people").on("click", ".save-Edit-People", function() {
+	// eslint-disable-next-line no-invalid-this
 	const parElement = this.parentElement
 	const elVal = parElement.firstElementChild.value
 	const number = Number(parElement.parentElement.firstElementChild.innerHTML)
