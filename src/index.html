@@ -16,7 +16,7 @@
 					</form>
 				</div>
 				<button class="btn  btn-primary" type="button" data-toggle="modal" data-target="#ModalAdd"> Добавить пользователя </button>
-				<button class="btn  btn-primary" type="button"  data-toggle="modal" data-target="#ModalProfession"> Професии </button>
+				<button class="btn  btn-primary js-ModalProfession-show" type="button"  data-toggle="modal" data-target="#ModalProfession"> Професии </button>
 			</div>
 
 			<table class="table">
@@ -40,7 +40,7 @@
 
 		</div>
 
-		<div class="modal fade" id="ModalAdd" tabindex="-1" role="dialog"  aria-hidden="true">
+		<div class="modal fade js-Modal-Add" id="ModalAdd" tabindex="-1" role="dialog"  aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -61,5 +61,47 @@
 				</div>
 			</div>
 		</div>
+
+        <div class="modal fade js-ModalProfession" id="ModalProfession" tabindex="-1" role="dialog"  aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="profession-block">
+                            <h3>Профессии</h3>
+                            <div></div>
+                        </div>
+                        <table class="table">
+                            <thead class="thead-inverse">
+                            <tr>
+                                <th>№</th>
+                                <th>Професии</th>
+                                <th>Обязаности</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody class="js-profession-view">
+
+                            </tbody>
+                        </table>
+                        <table class="table">
+                            <tbody>
+                            <tr class="js-profession-adds">
+
+                            </tr>
+                            </tbody>
+                        </table>
+                        <button class="btn  btn-primary profession-add-btn" type="button" onClick="ProfessionAdd();" > Добавить профессию </button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 	</body>
 </html>
