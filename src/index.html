@@ -95,7 +95,12 @@
                             </tr>
                             </tbody>
                         </table>
-                        <button class="btn  btn-primary profession-add-btn" type="button" onClick="ProfessionAdd();" > Добавить профессию </button>
+                        <div class="modal-footer js-modal-btn">
+                            <button class="btn  btn-primary js-profession-add-btn" type="button" > Добавить профессию </button>
+                        </div>
+                        <div class="alert alert-danger js-error-exists hide" role="alert">
+                            Эта запись уже существует!
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>

@@ -260,46 +260,39 @@ const ProfessionArr = [
 
 $(".js-ModalProfession-show").on("click", function() {
 	// eslint-disable-next-line new-cap
-	ProfessionView()
+	ProfessionView(ProfessionArr)
+	const professionBlockAdd =
+		'<input class="form-control js-profession-people-adds" type="text" placeholder="Введите название профессии">'
+	document.getElementsByClassName(
+		"js-profession-adds"
+	)[0].innerHTML = professionBlockAdd
+	document.getElementsByClassName("js-modal-btn")[0].innerHTML =
+		' <button class="btn  btn-primary js-profession-add-btn" type="button"> Добавить профессию </button>'
+})
+$(".js-ModalProfession").on("click", ".js-profession-add-btn", function() {
+	const val = document.getElementsByClassName("js-profession-people-adds")[0]
+		.value
+	// const length = Object.keys(obj[number].profession).length
+	console.log(ProfessionArr)
+	// eslint-disable-next-line new-cap
+	ProfessionAddSave(ProfessionArr, val, 0)
+	// // eslint-disable-next-line new-cap
+	// ProfessionView(ProfessionArr[this.dataset.num].profession)
 })
 // eslint-disable-next-line require-jsdoc
-function ProfessionView() {
+function ProfessionView(arr) {
 	let profession = ""
-	ProfessionArr.forEach(function(item, i, arr) {
-		profession +=
-			'<tr><th scope="row">' +
-			i +
-			'</th><th id="">' +
-			item.title +
-			'<i class="icon-pencil" title="Изменить"></i></th><th id=""><ul>'
-		/* for (key2 in obj[key].charge) {
-			profession += '<li>' + obj[key].charge[key2] + '<i class="icon-pencil" title="Изменить обязанности"></i><i class="icon-remove"  title="Удалить"></i></li>';
-		}*/
-		profession +=
-			'</ul><i class="icon-plus" title="Добавить обязанность"></i></th><th><i class="icon-remove" title="Удалить"></i></th></tr>'
-	})
-	document.getElementsByClassName(
-		"js-profession-view"
-	)[0].innerHTML = profession
-}
-
-$(".js-table-people").on("click", ".js-profession-setting", function() {
-	const numEl = this.parentElement.parentElement.firstElementChild
-	console.log(numEl.textContent)
-	$(".js-ModalProfession").modal("show")
-	let profession = ""
-	if (PeopleArray.profession) {
-		const professionAr = PeopleArray.profession
-		professionAr.forEach(function(item, i, arr) {
+	if (arr) {
+		Object.keys(arr).map(function(objectKey, index) {
 			profession +=
 				'<tr><th scope="row">' +
-				i +
+				index +
 				'</th><th id="">' +
-				item.title +
+				arr[objectKey].title +
 				'<i class="icon-pencil" title="Изменить"></i></th><th id=""><ul>'
 			/* for (key2 in obj[key].charge) {
-			profession += '<li>' + obj[key].charge[key2] + '<i class="icon-pencil" title="Изменить обязанности"></i><i class="icon-remove"  title="Удалить"></i></li>';
-		}*/
+				profession += '<li>' + obj[key].charge[key2] + '<i class="icon-pencil" title="Изменить обязанности"></i><i class="icon-remove"  title="Удалить"></i></li>';
+			}*/
 			profession +=
 				'</ul><i class="icon-plus" title="Добавить обязанность"></i></th><th><i class="icon-remove" title="Удалить"></i></th></tr>'
 		})
@@ -307,15 +300,78 @@ $(".js-table-people").on("click", ".js-profession-setting", function() {
 	document.getElementsByClassName(
 		"js-profession-view"
 	)[0].innerHTML = profession
+}
+
+$(".js-table-people").on("click", ".js-profession-setting", function() {
+	const numEl = this.parentElement.parentElement.firstElementChild
+	$(".js-ModalProfession").modal("show")
+	// eslint-disable-next-line new-cap
+	ProfessionView(PeopleArray.profession)
 	let professionBlockAdd =
 		'<div class="dropdown mr-1">\n' +
-		'    <select class="form-control" id="exampleFormControlSelect1">\n'
+		'    <select class="form-control js-profession-people-adds" id="exampleFormControlSelect1">\n'
 	ProfessionArr.forEach(function(item, i, arr) {
 		professionBlockAdd += "      <option>" + item.title + "</option>\n"
 	})
 	professionBlockAdd += "    </select>\n" + "  </div>"
-	console.log(professionBlockAdd)
 	document.getElementsByClassName(
 		"js-profession-adds"
 	)[0].innerHTML = professionBlockAdd
+	document.getElementsByClassName("js-modal-btn")[0].innerHTML =
+		' <button class="btn  btn-primary js-profession-add-people-btn" type="button" data-num="' +
+		numEl.textContent +
+		'"> Добавить профессию </button>'
 })
+
+$(".js-ModalProfession").on(
+	"click",
+	".js-profession-add-people-btn",
+	function() {
+		const val = document.getElementsByClassName("js-profession-people-adds")[0]
+			.value
+		// eslint-disable-next-line new-cap
+		ProfessionAddSave(PeopleArray, val, this.dataset.num)
+		// eslint-disable-next-line new-cap
+		ProfessionView(PeopleArray[this.dataset.num].profession)
+	}
+)
+
+// eslint-disable-next-line require-jsdoc
+function ProfessionAddSave(obj, val, number) {
+	const errorText = document.getElementsByClassName("js-error-exists")[0]
+	// eslint-disable-next-line new-cap
+	if (ProfessionСheck(obj[number].profession, val) === true) {
+		console.log("ProfessionСheck")
+		errorText.classList.remove("hide")
+	} else {
+		errorText.classList.add("hide")
+		if (obj[number].profession == undefined) {
+			obj[number].profession = {
+				0: {
+					title: val
+				}
+			}
+			console.log("ProfessionСheck1")
+		} else {
+			const length = Object.keys(obj[number].profession).length
+			obj[number].profession[length] = {
+				title: val
+			}
+			console.log("ProfessionСheck2")
+		}
+	}
+}
+
+// eslint-disable-next-line require-jsdoc
+function ProfessionСheck(obj, val) {
+	let flag = false
+	if (obj) {
+		Object.keys(obj).map(function(objectKey, index) {
+			const title = String(obj[objectKey].title)
+			if (title.toUpperCase() == val.toUpperCase()) {
+				flag = true
+			}
+		})
+	}
+	return flag
+}
