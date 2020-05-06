@@ -185,12 +185,10 @@ $(".js-table-people").on("click", ".js-editPeople", function() {
 
 // eslint-disable-next-line require-jsdoc
 function RemoveAll(element, arr, index) {
-	arr = Array.prototype.slice.call(arr)
 	arr.splice(index, 1)
 	const parentElements = element.parentElement
 	element.remove()
 	for (index; index < arr.length; index++) {
-		console.log(parentElements.children[index].firstElementChild)
 		parentElements.children[index].firstElementChild.innerHTML = index
 	}
 }
@@ -345,6 +343,13 @@ $(".js-ModalProfession").on(
 			.value
 		// eslint-disable-next-line new-cap
 		ProfessionAddSave(PeopleArray, val, this.dataset.num)
+		const el = document.getElementsByClassName("js-table-people")[0]
+		el.childNodes[this.dataset.num].querySelector(
+			".js-profession-column"
+		).innerHTML = professionUpdateTable(
+			PeopleArray[this.dataset.num].profession,
+			this.dataset.num
+		)
 		// eslint-disable-next-line new-cap
 		ProfessionView(PeopleArray[this.dataset.num].profession)
 	}
@@ -354,17 +359,23 @@ $(".js-ModalProfession").on("click", ".js-removeProfession", function() {
 	// ProfessionDelete(PeopleArray, this)
 	// eslint-disable-next-line new-cap
 	const el = document.getElementsByClassName("js-profession-add-people-btn")[0]
-	console.log(el)
-	console.log(PeopleArray[el.dataset.num].profession)
-	console.log(this.parentElement.parentElement)
-	console.log(Number(this.parentElement.parentElement.firstElementChild.innerHTML))
+	console.log(Array.from(PeopleArray[el.dataset.num].profession))
+	// eslint-disable-next-line new-cap
 	RemoveAll(
 		this.parentElement.parentElement,
 		PeopleArray[el.dataset.num].profession,
 		Number(this.parentElement.parentElement.firstElementChild.innerHTML)
 	)
+	const elem = document.getElementsByClassName("js-table-people")[0]
+	console.log(elem.childNodes[this.dataset.num])
+	// elem.childNodes[this.dataset.num].querySelector(
+	// 	".js-profession-column"
+	// ).innerHTML = professionUpdateTable(
+	// 	PeopleArray[this.dataset.num].profession,
+	// 	this.dataset.num
+	// )
 	// eslint-disable-next-line new-cap
-	// ProfessionView(PeopleArray[this.dataset.num].profession)
+	ProfessionView(PeopleArray[el.dataset.num].profession)
 })
 
 // eslint-disable-next-line require-jsdoc
@@ -390,11 +401,11 @@ function ProfessionAddSave(obj, val, number) {
 	} else {
 		errorText.classList.add("hide")
 		if (obj[number].profession == undefined) {
-			obj[number].profession = {
-				0: {
+			obj[number].profession = [
+				{
 					title: val
 				}
-			}
+			]
 			console.log("ProfessionСheck1")
 		} else {
 			const length = Object.keys(obj[number].profession).length
@@ -402,10 +413,6 @@ function ProfessionAddSave(obj, val, number) {
 				title: val
 			}
 		}
-		const el = document.getElementsByClassName("js-table-people")[0]
-		el.childNodes[number].querySelector(
-			".js-profession-column"
-		).innerHTML = professionUpdateTable(obj[number].profession, number)
 	}
 }
 // eslint-disable-next-line require-jsdoc
