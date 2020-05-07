@@ -108,7 +108,7 @@ function tablePeopleRowBuild(
 }
 
 /* Через jquery это проще и меньше кода +
- Не нашла как в js отследить клик на добавленных в DOM элементов с помощью js,
+ Не нашла как в js отследить клик на уже добавленных в DOM элементов с помощью js,
  поэтому использую jquery
  */
 $(".js-table-people").on("click", ".js-removePeople", function() {
@@ -138,50 +138,6 @@ $(".js-table-people").on("click", ".js-editPeople", function() {
 		parElement.innerHTML = '<input type="text">' + okIcon
 	}
 })
-// window.onload = function() {
-// 	const removePeople = document.getElementsByClassName("js-removePeople")
-// 	const formSearch = document.getElementsByClassName("js-form-search")
-// 	const editPeople = document.getElementsByClassName("js-editPeople")
-// 	// const saveEditPeople = document.getElementsByClassName("js-save-Edit-People")
-//
-// 	for (let i = 0; i < removePeople.length; i++) {
-// 		removePeople[i].onclick = function() {
-// 			// eslint-disable-next-line new-cap
-// 			RemoveAll(
-// 				this.parentElement.parentElement,
-// 				PeopleArray,
-// 				Number(this.parentElement.parentElement.firstElementChild.innerHTML)
-// 			)
-// 		}
-// 	}
-// 	for (let i = 0; i < formSearch.length; i++) {
-// 		formSearch[i].onclick = function() {
-// 			// eslint-disable-next-line new-cap
-// 			PeopleView()
-// 			event.preventDefault()
-// 		}
-// 	}
-// 	for (let i = 0; i < editPeople.length; i++) {
-// 		editPeople[i].onclick = function() {
-// 			const parElement = this.parentElement
-// 			const okIcon =
-// 				'<svg class="bi bi-file-earmark-check js-save-Edit-People" width="1em" height="1em"  title="Сохранить" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">\n' +
-// 				'  <path d="M9 1H4a2 2 0 00-2 2v10a2 2 0 002 2h5v-1H4a1 1 0 01-1-1V3a1 1 0 011-1h5v2.5A1.5 1.5 0 0010.5 6H13v2h1V6L9 1z"/>\n' +
-// 				'  <path fill-rule="evenodd" d="M15.854 10.146a.5.5 0 010 .708l-3 3a.5.5 0 01-.708 0l-1.5-1.5a.5.5 0 01.708-.708l1.146 1.147 2.646-2.647a.5.5 0 01.708 0z" clip-rule="evenodd"/>\n' +
-// 				"</svg>"
-// 			if (parElement.id === "date") {
-// 				parElement.innerHTML = '<input type="date">' + okIcon
-// 			} else {
-// 				parElement.innerHTML = '<input type="text">' + okIcon
-// 			}
-// 		}
-// 	}
-// 	// for (let i = 0; i < saveEditPeople.length; i++) {
-// 	// 	saveEditPeople[i].onclick = function() {
-// 	//
-// 	// 	}
-// 	// }
-// }
 
 // eslint-disable-next-line require-jsdoc
 function RemoveAll(element, arr, index) {
@@ -248,11 +204,11 @@ const ProfessionArr = [
 		profession: [
 			{
 				title: "Программист",
-				charge: { 0: "Писать код", 1: "Отрастить бороду" }
+				charge: [{ title: "Писать код" }, { title: "Отрастить бороду" }]
 			},
 			{
 				title: "Дизайнер",
-				charge: { 0: "Рисовать", 1: "Придумывать" }
+				charge: [{ title: "Рисовать" }, { title: "Придумывать" }]
 			}
 		]
 	}
@@ -272,11 +228,9 @@ $(".js-ModalProfession-show").on("click", function() {
 $(".js-ModalProfession").on("click", ".js-profession-add-btn", function() {
 	const val = document.getElementsByClassName("js-profession-input-adds")[0]
 		.value
-	// const length = Object.keys(obj[number].profession).length
 	console.log(ProfessionArr)
 	// eslint-disable-next-line new-cap
-	ProfessionAddSave(ProfessionArr, val, 0)
-	console.log(ProfessionArr)
+	ProfessionAddSave(ProfessionArr, val, 0, true)
 	// eslint-disable-next-line new-cap
 	ProfessionView(ProfessionArr[0].profession)
 	document.getElementsByClassName("js-profession-input-adds")[0].value = ""
@@ -290,19 +244,43 @@ function ProfessionView(arr) {
 	let profession = ""
 	if (arr) {
 		Object.keys(arr).map(function(objectKey, index) {
+			const proffWindows = arr === ProfessionArr[0].profession
 			profession +=
 				'<tr><th scope="row">' +
 				index +
 				'</th><th id="">' +
 				arr[objectKey].title +
 				'<i class="icon-pencil" title="Изменить"></i></th><th id=""><ul>'
-			/* for (key2 in obj[key].charge) {
-				profession += '<li>' + obj[key].charge[key2] + '<i class="icon-pencil" title="Изменить обязанности"></i><i class="icon-remove"  title="Удалить"></i></li>';
-			}*/
+			if (proffWindows) {
+				if (arr[objectKey].charge) {
+					Object.keys(arr[objectKey].charge).map(function(objectKey2, index2) {
+						profession +=
+							"<li>" +
+							arr[objectKey].charge[objectKey2].title +
+							'<svg class="bi bi-x js-icon-remove-charge" data-chargeKey="' +
+							objectKey2 +
+							'" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">\n' +
+							'  <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 010 .708l-7 7a.5.5 0 01-.708-.708l7-7a.5.5 0 01.708 0z" clip-rule="evenodd"/>\n' +
+							'  <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 000 .708l7 7a.5.5 0 00.708-.708l-7-7a.5.5 0 00-.708 0z" clip-rule="evenodd"/>\n' +
+							"</svg></li>"
+					})
+				}
+				profession +=
+					'</ul><div class="charge-add-block"><input class="form-control form-control-sm" type="text">' +
+					'<svg class="bi bi-plus-square js-charge-add" title="Добавить обязанность" width="1.7em" height="1.7em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">\n' +
+					'  <path fill-rule="evenodd" d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z" clip-rule="evenodd"/>\n' +
+					'  <path fill-rule="evenodd" d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z" clip-rule="evenodd"/>\n' +
+					'  <path fill-rule="evenodd" d="M14 1H2a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V2a1 1 0 00-1-1zM2 0a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V2a2 2 0 00-2-2H2z" clip-rule="evenodd"/>\n' +
+					"</svg></div>"
+			} else {
+				profession += returnCharge(arr[objectKey].title)
+			}
+
+			profession += '</th><th><svg class="bi bi-trash '
+			if (proffWindows) profession += "js-removeProfession"
+			else profession += "js-removeProfession-people"
 			profession +=
-				'</ul><i class="icon-plus" title="Добавить обязанность"></i></th><th><i class="icon-remove" title="Удалить"></i></th>'
-			profession +=
-				'<th><svg class="bi bi-trash js-removeProfession" title="Удалить" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">\n' +
+				'" title="Удалить" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">\n' +
 				'  <path d="M5.5 5.5A.5.5 0 016 6v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm3 .5a.5.5 0 00-1 0v6a.5.5 0 001 0V6z"/>\n' +
 				'  <path fill-rule="evenodd" d="M14.5 3a1 1 0 01-1 1H13v9a2 2 0 01-2 2H5a2 2 0 01-2-2V4h-.5a1 1 0 01-1-1V2a1 1 0 011-1H6a1 1 0 011-1h2a1 1 0 011 1h3.5a1 1 0 011 1v1zM4.118 4L4 4.059V13a1 1 0 001 1h6a1 1 0 001-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" clip-rule="evenodd"/>\n' +
 				"</svg></th></tr>"
@@ -311,6 +289,23 @@ function ProfessionView(arr) {
 	document.getElementsByClassName(
 		"js-profession-view"
 	)[0].innerHTML = profession
+}
+
+// eslint-disable-next-line require-jsdoc
+function returnCharge(title) {
+	let professionCharge = ""
+	ProfessionArr[0].profession.forEach(function(item) {
+		if (item.title === title) {
+			if (item.charge) {
+				item.charge.forEach(function(itemCharge) {
+					professionCharge += "      <li>" + itemCharge.title + "</li>\n"
+				})
+			} else {
+				professionCharge += "У данной профессии ещё нет обязаностей"
+			}
+		}
+	})
+	return professionCharge
 }
 
 $(".js-table-people").on("click", ".js-profession-setting", function() {
@@ -342,7 +337,7 @@ $(".js-ModalProfession").on(
 		const val = document.getElementsByClassName("js-profession-people-adds")[0]
 			.value
 		// eslint-disable-next-line new-cap
-		ProfessionAddSave(PeopleArray, val, this.dataset.num)
+		ProfessionAddSave(PeopleArray, val, this.dataset.num, true)
 		const el = document.getElementsByClassName("js-table-people")[0]
 		el.childNodes[this.dataset.num].querySelector(
 			".js-profession-column"
@@ -354,12 +349,32 @@ $(".js-ModalProfession").on(
 		ProfessionView(PeopleArray[this.dataset.num].profession)
 	}
 )
+$(".js-ModalProfession").on("click", ".js-icon-remove-charge", function(event) {
+	const index = Number(
+		this.parentElement.parentElement.parentElement.parentElement
+			.firstElementChild.textContent
+	)
+	console.log(ProfessionArr[0].profession[index].charge)
+	// eslint-disable-next-line new-cap
+	RemoveAll(
+		this.parentElement,
+		ProfessionArr[0].profession[index].charge,
+		Number(this.dataset.chargekey)
+	)
+	console.log(ProfessionArr[0].profession[index].charge)
+})
+
 $(".js-ModalProfession").on("click", ".js-removeProfession", function() {
 	// eslint-disable-next-line new-cap
-	// ProfessionDelete(PeopleArray, this)
+	RemoveAll(
+		this.parentElement.parentElement,
+		ProfessionArr[0].profession,
+		Number(this.parentElement.parentElement.firstElementChild.innerHTML)
+	)
+})
+$(".js-ModalProfession").on("click", ".js-removeProfession-people", function() {
 	// eslint-disable-next-line new-cap
 	const el = document.getElementsByClassName("js-profession-add-people-btn")[0]
-	console.log(Array.from(PeopleArray[el.dataset.num].profession))
 	// eslint-disable-next-line new-cap
 	RemoveAll(
 		this.parentElement.parentElement,
@@ -367,15 +382,12 @@ $(".js-ModalProfession").on("click", ".js-removeProfession", function() {
 		Number(this.parentElement.parentElement.firstElementChild.innerHTML)
 	)
 	const elem = document.getElementsByClassName("js-table-people")[0]
-	console.log(elem.childNodes[this.dataset.num])
-	// elem.childNodes[this.dataset.num].querySelector(
-	// 	".js-profession-column"
-	// ).innerHTML = professionUpdateTable(
-	// 	PeopleArray[this.dataset.num].profession,
-	// 	this.dataset.num
-	// )
-	// eslint-disable-next-line new-cap
-	ProfessionView(PeopleArray[el.dataset.num].profession)
+	elem.childNodes[el.dataset.num].querySelector(
+		".js-profession-column"
+	).innerHTML = professionUpdateTable(
+		PeopleArray[el.dataset.num].profession,
+		el.dataset.num
+	)
 })
 
 // eslint-disable-next-line require-jsdoc
@@ -392,41 +404,67 @@ function professionUpdateTable(arr) {
 	return html
 }
 
-// eslint-disable-next-line require-jsdoc
-function ProfessionAddSave(obj, val, number) {
-	const errorText = document.getElementsByClassName("js-error-exists")[0]
+$(".js-ModalProfession").on("click", ".js-charge-add", function() {
+	const index = Number(
+		this.parentElement.parentElement.parentElement.firstElementChild.textContent
+	)
+	let length
+	try {
+		if (ProfessionArr[0].profession[index].charge.length) {
+			length = ProfessionArr[0].profession[index].charge.length
+		}
+	} catch (err) {
+		length = 0
+	}
+	const input = this.parentElement.firstElementChild
+	const li = document.createElement("li")
+	li.innerHTML =
+		input.value +
+		'<svg class="bi bi-x js-icon-remove-charge" data-chargeKey="\' +\n' +
+		length +
+		'" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">\\n\' +\n' +
+		'<path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 010 .708l-7 7a.5.5 0 01-.708-.708l7-7a.5.5 0 01.708 0z" clip-rule="evenodd"/>\\n\' +\n' +
+		'<path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 000 .708l7 7a.5.5 0 00.708-.708l-7-7a.5.5 0 00-.708 0z" clip-rule="evenodd"/>\\n\' +\n' +
+		'"</svg>'
+	this.parentElement.parentElement.firstElementChild.append(li)
 	// eslint-disable-next-line new-cap
-	if (ProfessionСheck(obj[number].profession, val) === true) {
-		errorText.classList.remove("hide")
+	ProfessionAddSave(ProfessionArr[0].profession, input.value, index)
+	input.value = ""
+})
+
+// eslint-disable-next-line require-jsdoc
+function ProfessionAddSave(obj, val, number, prof = false) {
+	const errorText = document.getElementsByClassName("js-error-exists")[0]
+	if (obj[number].profession === undefined && prof === true) {
+		obj[number].profession = [
+			{
+				title: val
+			}
+		]
+		console.log("ProfessionСheck1")
+	} else if (obj[number].charge === undefined && prof === false) {
+		obj[number].charge = [
+			{
+				title: val
+			}
+		]
+		console.log("ProfessionСheck1")
 	} else {
-		errorText.classList.add("hide")
-		if (obj[number].profession == undefined) {
-			obj[number].profession = [
-				{
-					title: val
-				}
-			]
-			console.log("ProfessionСheck1")
+		let objec = obj[number].charge
+		if (prof) {
+			objec = obj[number].profession
+		}
+		// eslint-disable-next-line new-cap
+		if (ProfessionСheck(objec, val) === true) {
+			errorText.classList.remove("hide")
 		} else {
-			const length = Object.keys(obj[number].profession).length
-			obj[number].profession[length] = {
+			errorText.classList.add("hide")
+			const length = Object.keys(objec).length
+			objec[length] = {
 				title: val
 			}
 		}
 	}
-}
-// eslint-disable-next-line require-jsdoc
-function ProfessionDelete(obj, el) {
-	console.log(obj)
-	console.log(el)
-	// const length = Object.keys(obj[number].profession).length
-	// obj[number].profession[length] = {
-	// 	title: val
-	// }
-	// const el = document.getElementsByClassName("js-table-people")[0]
-	// el.childNodes[number].querySelector(
-	// 	".js-profession-column"
-	// ).innerHTML = professionUpdateTable(obj[number].profession, number)
 }
 
 // eslint-disable-next-line require-jsdoc
