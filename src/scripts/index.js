@@ -2,8 +2,7 @@
 import "../../node_modules/bootstrap/scss/bootstrap.scss"
 import "../styles/styles.styl"
 import $ from "jquery"
-// eslint-disable-next-line no-unused-vars
-import bootstrap from "bootstrap"
+import "bootstrap"
 
 console.log("webpack starterkit")
 let obj = $.ajax({
@@ -21,10 +20,15 @@ obj = JSON.parse(obj)
 let PeopleArray = []
 PeopleArray = obj.results
 
-// eslint-disable-next-line new-cap
-PeopleView()
+peopleView()
 
-// eslint-disable-next-line require-jsdoc
+/**
+ * Поиск людей по фамилии и/или имени
+ *
+ * @param {object} obj - объект, содержащий данные людей
+ * @param {string} val - значение из импута поиска
+ * @return {boolean}
+ */
 function searchExists(obj, val) {
 	const objVal = val.split(" ")
 	const nameFirst = obj.name.first
@@ -40,9 +44,12 @@ function searchExists(obj, val) {
 		}
 	}
 }
-// eslint-disable-next-line require-jsdoc
-function PeopleView() {
-	const searchVal = $(".js-search-input").val()
+/**
+ * Вывод людей с фильтрацией по поиску
+ *
+ */
+function peopleView() {
+	const searchVal = document.getElementsByClassName("js-search-input")[0].value
 	let tablePeople = ""
 	const PeopleArrayFilter = PeopleArray.filter(obj => {
 		let flag = false
@@ -66,7 +73,17 @@ function PeopleView() {
 	document.getElementsByClassName("js-table-people")[0].innerHTML = tablePeople
 }
 
-// eslint-disable-next-line require-jsdoc
+/**
+ * Построение таблицы для вывода людей
+ *
+ * @param {number} i - номер итерциии
+ * @param {string} nameFirst - Имя человка
+ * @param {string} nameLast - Фамилия человка
+ * @param {string} date - Дата рождения
+ * @param {string} thumbnail - Ссылка на фотографию человека
+ * @param {string} profession - Профессия. Если профессия не указана, берется значение по умолчанию - "Безработный"
+ * @return {string}
+ */
 function tablePeopleRowBuild(
 	i,
 	nameFirst,
@@ -112,16 +129,14 @@ function tablePeopleRowBuild(
  поэтому использую jquery
  */
 $(".js-table-people").on("click", ".js-removePeople", function() {
-	// eslint-disable-next-line new-cap
-	RemoveAll(
+	removeAll(
 		this.parentElement.parentElement,
 		PeopleArray,
 		Number(this.parentElement.parentElement.firstElementChild.innerHTML)
 	)
 })
 $(".js-form-search").submit(function() {
-	// eslint-disable-next-line new-cap
-	PeopleView()
+	peopleView()
 	event.preventDefault()
 })
 
@@ -139,8 +154,14 @@ $(".js-table-people").on("click", ".js-editPeople", function() {
 	}
 })
 
-// eslint-disable-next-line require-jsdoc
-function RemoveAll(element, arr, index) {
+/**
+ * Функция удаления из массива, который содержит в себе объекты
+ *
+ * @param {string} element - элемент в DOM
+ * @param {array} arr - Массив с данными
+ * @param {number} index - Индекс элемента массива
+ */
+function removeAll(element, arr, index) {
 	arr.splice(index, 1)
 	const parentElements = element.parentElement
 	element.remove()
@@ -153,12 +174,19 @@ $(".js-table-people").on("click", ".js-save-Edit-People", function() {
 	const parElement = this.parentElement
 	const elVal = parElement.firstElementChild.value
 	const number = Number(parElement.parentElement.firstElementChild.innerHTML)
-	// eslint-disable-next-line new-cap
-	EditPeopleSave(PeopleArray, parElement.id, elVal, parElement, number)
+	editPeopleSave(PeopleArray, parElement.id, elVal, parElement, number)
 })
 
-// eslint-disable-next-line require-jsdoc
-function EditPeopleSave(obj, key, val, element, number) {
+/**
+ * Функция сохранения измененных данных в табличке с людьми
+ *
+ * @param {object} obj - элемент в DOM
+ * @param {number} key - Ключ элемента массива
+ * @param {string} val - Новое значение
+ * @param {string} element - Элемент DOM
+ * @param {number} number - Индекс элемента массива
+ */
+function editPeopleSave(obj, key, val, element, number) {
 	const pencilIcon =
 		'<svg class="bi bi-pencil js-editPeople" width="1em" height="1em" title="Изменить" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">\n' +
 		'  <path fill-rule="evenodd" d="M11.293 1.293a1 1 0 011.414 0l2 2a1 1 0 010 1.414l-9 9a1 1 0 01-.39.242l-3 1a1 1 0 01-1.266-1.265l1-3a1 1 0 01.242-.391l9-9zM12 2l2 2-9 9-3 1 1-3 9-9z" clip-rule="evenodd"/>\n' +
@@ -215,8 +243,7 @@ const ProfessionArr = [
 ]
 
 $(".js-ModalProfession-show").on("click", function() {
-	// eslint-disable-next-line new-cap
-	ProfessionView(ProfessionArr[0].profession)
+	professionView(ProfessionArr[0].profession)
 	const professionBlockAdd =
 		'<input class="form-control js-profession-input-adds" type="text" placeholder="Введите название профессии">'
 	document.getElementsByClassName(
@@ -228,19 +255,20 @@ $(".js-ModalProfession-show").on("click", function() {
 $(".js-ModalProfession").on("click", ".js-profession-add-btn", function() {
 	const val = document.getElementsByClassName("js-profession-input-adds")[0]
 		.value
-	console.log(ProfessionArr)
-	// eslint-disable-next-line new-cap
-	ProfessionAddSave(ProfessionArr, val, 0, true)
-	// eslint-disable-next-line new-cap
-	ProfessionView(ProfessionArr[0].profession)
+	professionAddSave(ProfessionArr, val, 0, true)
+	professionView(ProfessionArr[0].profession)
 	document.getElementsByClassName("js-profession-input-adds")[0].value = ""
 })
 $("#ModalProfession").on("show.bs.modal", function(e) {
 	const errorText = document.getElementsByClassName("js-error-exists")[0]
 	errorText.classList.add("hide")
 })
-// eslint-disable-next-line require-jsdoc
-function ProfessionView(arr) {
+/**
+ * Функция вывода профессий в таблицу
+ *
+ * @param {object} arr - объект данных
+ */
+function professionView(arr) {
 	let profession = ""
 	if (arr) {
 		Object.keys(arr).map(function(objectKey, index) {
@@ -291,7 +319,12 @@ function ProfessionView(arr) {
 	)[0].innerHTML = profession
 }
 
-// eslint-disable-next-line require-jsdoc
+/**
+ * Вывод обязаностей у людей
+ *
+ * @param {string} title - Название проффесии
+ * @return {string}
+ */
 function returnCharge(title) {
 	let professionCharge = ""
 	ProfessionArr[0].profession.forEach(function(item) {
@@ -311,9 +344,7 @@ function returnCharge(title) {
 $(".js-table-people").on("click", ".js-profession-setting", function() {
 	const numEl = this.parentElement.parentElement.firstElementChild
 	$(".js-ModalProfession").modal("show")
-	// console.log(PeopleArray[numEl.textContent].profession)
-	// eslint-disable-next-line new-cap
-	ProfessionView(PeopleArray[numEl.textContent].profession)
+	professionView(PeopleArray[numEl.textContent].profession)
 	let professionBlockAdd =
 		'<div class="dropdown mr-1">\n' +
 		'    <select class="form-control js-profession-people-adds" id="exampleFormControlSelect1">\n'
@@ -336,8 +367,7 @@ $(".js-ModalProfession").on(
 	function() {
 		const val = document.getElementsByClassName("js-profession-people-adds")[0]
 			.value
-		// eslint-disable-next-line new-cap
-		ProfessionAddSave(PeopleArray, val, this.dataset.num, true)
+		professionAddSave(PeopleArray, val, this.dataset.num, true)
 		const el = document.getElementsByClassName("js-table-people")[0]
 		el.childNodes[this.dataset.num].querySelector(
 			".js-profession-column"
@@ -345,8 +375,7 @@ $(".js-ModalProfession").on(
 			PeopleArray[this.dataset.num].profession,
 			this.dataset.num
 		)
-		// eslint-disable-next-line new-cap
-		ProfessionView(PeopleArray[this.dataset.num].profession)
+		professionView(PeopleArray[this.dataset.num].profession)
 	}
 )
 $(".js-ModalProfession").on("click", ".js-icon-remove-charge", function(event) {
@@ -355,8 +384,7 @@ $(".js-ModalProfession").on("click", ".js-icon-remove-charge", function(event) {
 			.firstElementChild.textContent
 	)
 	console.log(ProfessionArr[0].profession[index].charge)
-	// eslint-disable-next-line new-cap
-	RemoveAll(
+	removeAll(
 		this.parentElement,
 		ProfessionArr[0].profession[index].charge,
 		Number(this.dataset.chargekey)
@@ -365,18 +393,15 @@ $(".js-ModalProfession").on("click", ".js-icon-remove-charge", function(event) {
 })
 
 $(".js-ModalProfession").on("click", ".js-removeProfession", function() {
-	// eslint-disable-next-line new-cap
-	RemoveAll(
+	removeAll(
 		this.parentElement.parentElement,
 		ProfessionArr[0].profession,
 		Number(this.parentElement.parentElement.firstElementChild.innerHTML)
 	)
 })
 $(".js-ModalProfession").on("click", ".js-removeProfession-people", function() {
-	// eslint-disable-next-line new-cap
 	const el = document.getElementsByClassName("js-profession-add-people-btn")[0]
-	// eslint-disable-next-line new-cap
-	RemoveAll(
+	removeAll(
 		this.parentElement.parentElement,
 		PeopleArray[el.dataset.num].profession,
 		Number(this.parentElement.parentElement.firstElementChild.innerHTML)
@@ -390,7 +415,12 @@ $(".js-ModalProfession").on("click", ".js-removeProfession-people", function() {
 	)
 })
 
-// eslint-disable-next-line require-jsdoc
+/**
+ * Обновление информации о профессии в таблице с людьми
+ *
+ * @param {Array} arr - Массив обязаностей
+ * @return {string}
+ */
 function professionUpdateTable(arr) {
 	let html = ""
 	Object.keys(arr).map(function(key, index) {
@@ -408,32 +438,21 @@ $(".js-ModalProfession").on("click", ".js-charge-add", function() {
 	const index = Number(
 		this.parentElement.parentElement.parentElement.firstElementChild.textContent
 	)
-	let length
-	try {
-		if (ProfessionArr[0].profession[index].charge.length) {
-			length = ProfessionArr[0].profession[index].charge.length
-		}
-	} catch (err) {
-		length = 0
-	}
 	const input = this.parentElement.firstElementChild
-	const li = document.createElement("li")
-	li.innerHTML =
-		input.value +
-		'<svg class="bi bi-x js-icon-remove-charge" data-chargeKey="\' +\n' +
-		length +
-		'" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">\\n\' +\n' +
-		'<path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 010 .708l-7 7a.5.5 0 01-.708-.708l7-7a.5.5 0 01.708 0z" clip-rule="evenodd"/>\\n\' +\n' +
-		'<path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 000 .708l7 7a.5.5 0 00.708-.708l-7-7a.5.5 0 00-.708 0z" clip-rule="evenodd"/>\\n\' +\n' +
-		'"</svg>'
-	this.parentElement.parentElement.firstElementChild.append(li)
-	// eslint-disable-next-line new-cap
-	ProfessionAddSave(ProfessionArr[0].profession, input.value, index)
+	professionAddSave(ProfessionArr[0].profession, input.value, index)
+	professionView(ProfessionArr[0].profession)
 	input.value = ""
 })
 
-// eslint-disable-next-line require-jsdoc
-function ProfessionAddSave(obj, val, number, prof = false) {
+/**
+ * Сохранение новой профессии и обязанности
+ *
+ * @param {object} obj - Массив в котором находятся профессии и/или обязанности
+ * @param {string} val - Новое значение для сохранения
+ * @param {number} number - Индекс массива
+ * @param {boolean} prof - Флаг для различия профессий от обязаностей
+ */
+function professionAddSave(obj, val, number, prof = false) {
 	const errorText = document.getElementsByClassName("js-error-exists")[0]
 	if (obj[number].profession === undefined && prof === true) {
 		obj[number].profession = [
@@ -454,8 +473,7 @@ function ProfessionAddSave(obj, val, number, prof = false) {
 		if (prof) {
 			objec = obj[number].profession
 		}
-		// eslint-disable-next-line new-cap
-		if (ProfessionСheck(objec, val) === true) {
+		if (professionСheck(objec, val) === true) {
 			errorText.classList.remove("hide")
 		} else {
 			errorText.classList.add("hide")
@@ -467,13 +485,19 @@ function ProfessionAddSave(obj, val, number, prof = false) {
 	}
 }
 
-// eslint-disable-next-line require-jsdoc
-function ProfessionСheck(obj, val) {
+/**
+ * Проверка при добавлении новой профессии или обязанности. Если значение уже имеется, то возвращает true
+ *
+ * @param {Array/object} obj - Массив обязаностей или объект профессий
+ * @param {string} val - Новое значение из инпута
+ * @return {boolean}
+ */
+function professionСheck(obj, val) {
 	let flag = false
 	if (obj) {
-		Object.keys(obj).map(function(objectKey, index) {
+		Object.keys(obj).map(function(objectKey) {
 			const title = String(obj[objectKey].title)
-			if (title.toUpperCase() == val.toUpperCase()) {
+			if (title.toUpperCase() === val.toUpperCase()) {
 				flag = true
 			}
 		})
